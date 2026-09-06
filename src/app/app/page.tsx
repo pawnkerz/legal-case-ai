@@ -1,27 +1,7 @@
-"use client";
-
-import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowUp, FilePlus2, Scale, ShieldCheck, Sparkles } from "lucide-react";
-import { classifyLegalRequest, complianceNotice } from "@/lib/compliance";
-import { FREE_INTERACTION_LIMIT, remainingTrialInteractions } from "@/lib/trial";
+import { FileText, Gavel, Scale, Search, ShieldCheck } from "lucide-react";
+import { LegalChat } from "@/components/legal-chat";
 
 export default function LegalWorkspace() {
-  const [input, setInput] = useState("");
-  const [used, setUsed] = useState(0);
-  const [messages, setMessages] = useState<Array<{q:string; notice:string}>>([]);
-  const remaining = remainingTrialInteractions(used);
-  const disabled = remaining === 0;
-  const classification = useMemo(() => classifyLegalRequest(input), [input]);
-
-  function submit() {
-    if (!input.trim() || disabled) return;
-    setMessages((m) => [...m, { q: input.trim(), notice: complianceNotice(classification) }]);
-    setUsed((u) => u + 1);
-    setInput("");
-  }
-
-  return <main className="workspace"><aside className="sidebar"><LinkBrand/><Link className="newCase" href="/cases/new">+ New case</Link><nav><Link className="active" href="/app">Ask Legal AI</Link><Link href="/cases">My cases</Link><span className="disabledNav" aria-disabled="true">Documents · backend pending</span><Link href="/immigration">Immigration</Link></nav><div className="trialBadge"><strong>{remaining} of {FREE_INTERACTION_LIMIT}</strong><span>free interactions left</span></div></aside><section className="chat"><header><div><strong>Legal AI</strong><span>Jurisdiction-aware self-help assistant</span></div><div className="status"><ShieldCheck size={16}/> Compliance protected</div></header><div className="conversation">{messages.length === 0 ? <div className="welcome"><Scale size={38}/><h1>What legal matter can I help you understand?</h1><p>Ask a legal question or describe what happened. I’ll help identify the jurisdiction, issues, documents, and authoritative sources that may apply.</p><div className="suggestions"><button onClick={()=>setInput("I received an eviction notice in Washington. Help me understand it.")}>Housing notice</button><button onClick={()=>setInput("I have an immigration case and received a USCIS request for evidence.")}>Immigration RFE</button><button onClick={()=>setInput("Help me organize evidence for a civil case.")}>Build a case</button></div></div> : messages.map((m,i)=><div className="messageGroup" key={i}><div className="userMessage">{m.q}</div><div className="aiMessage"><Sparkles size={18}/><div><strong>Case intake captured.</strong><p>The production legal-retrieval engine will answer here after jurisdiction resolution and citation verification.</p><div className="notice">{m.notice}</div></div></div></div>)}</div><div className="composerWrap">{disabled && <div className="paywall"><strong>Your 5 free interactions are complete.</strong><span>Unlock the full case workspace for $59/month.</span><Link href="/pricing">Unlock full access</Link></div>}<div className="composer"><button aria-label="Attach document" disabled title="Document storage is enabled after the isolated backend is provisioned"><FilePlus2 size={20}/></button><textarea aria-label="Legal question" value={input} disabled={disabled} onChange={(e)=>setInput(e.target.value)} placeholder="Describe your legal question or case..." rows={2}/><button className="send" onClick={submit} disabled={disabled || !input.trim()} aria-label="Send"><ArrowUp size={20}/></button></div><p>Legal information and self-help assistance only. Not a law firm or substitute for licensed representation.</p></div></section></main>;
+  return <main className="workspace"><aside className="sidebar"><Link href="/" className="brand"><Scale size={22}/> Legal Case AI</Link><Link className="newCase" href="/app/cases/new">+ New case</Link><nav><Link className="active" href="/app">Ask Legal AI</Link><Link href="/app/cases">My cases</Link><Link href="/documents"><FileText size={16}/> Documents</Link><Link href="/immigration">Immigration</Link><Link href="/research"><Search size={16}/> Legal research</Link><Link href="/court-prep"><Gavel size={16}/> Court prep</Link></nav><div className="trialBadge"><strong>$59/month</strong><span>after 5 free interactions</span><Link href="/account">Account</Link></div></aside><section className="chat"><header><div><strong>Legal AI</strong><span>Jurisdiction-aware legal information & case preparation</span></div><div className="status"><ShieldCheck size={16}/> Compliance protected</div></header><LegalChat/></section></main>;
 }
-
-function LinkBrand(){return <Link className="brand" href="/"><Scale size={22}/> Legal Case AI</Link>}
