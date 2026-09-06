@@ -9,7 +9,14 @@ export async function uploadCaseDocument(client: SupabaseClient, input: { caseId
   const path = `${userData.user.id}/${input.caseId}/${crypto.randomUUID()}-${safeName}`;
   const { error: uploadError } = await client.storage.from(BUCKET).upload(path, input.file, { upsert: false });
   if (uploadError) throw uploadError;
-  const { data, error } = await client.from("documents").insert({ case_id: input.caseId, user_id: userData.user.id, name: input.file.name, storage_path: path, mime_type: input.file.type, size_bytes: input.file.size }).select("*").single();
+  const { data, error } = await client.from("case_documents").insert({
+    case_id: input.caseId,
+    user_id: userData.user.id,
+    original_name: input.file.name,
+    storage_path: path,
+    mime_type: input.file.type || "application/octet-stream",
+    size_bytes: input.file.size,
+  }).select("*").single();
   if (error) {
     await client.storage.from(BUCKET).remove([path]);
     throw error;
