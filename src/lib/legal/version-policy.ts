@@ -1,0 +1,1 @@
+export const CURRENT_LAW_POLICY = "Current-law answers must use authority that is verified, not superseded, and effective for the relevant date. Historical authorities may be discussed only when the user asks for historical analysis or they are necessary to explain the development of current law.";
