@@ -7,11 +7,11 @@ export function SubscribeButton() {
   const [error, setError] = useState("");
 
   async function subscribe() {
-    setLoading(true);
-    setError("");
+    setLoading(true); setError("");
     try {
       const response = await fetch("/api/stripe/checkout", { method: "POST" });
       const data = await response.json();
+      if (response.status === 401) { window.location.assign("/login?next=/pricing"); return; }
       if (!response.ok) throw new Error(data.error ?? "Unable to start checkout");
       window.location.assign(data.url);
     } catch (err) {
