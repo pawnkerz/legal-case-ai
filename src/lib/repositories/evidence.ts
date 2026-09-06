@@ -6,7 +6,7 @@ export async function listEvidence(client: SupabaseClient, caseId: string) {
   return data ?? [];
 }
 
-export async function addEvidence(client: SupabaseClient, input: { case_id: string; label: string; kind: string; status?: string; notes?: string | null }) {
+export async function addEvidence(client: SupabaseClient, input: { case_id: string; user_id: string; label: string; kind: string; status?: string; notes?: string | null }) {
   const { data, error } = await client.from("evidence_items").insert({ ...input, status: input.status ?? "collected" }).select("*").single();
   if (error) throw error;
   return data;
