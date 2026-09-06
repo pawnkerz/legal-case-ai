@@ -17,4 +17,15 @@ Production foundation for a jurisdiction-aware legal research, case-preparation,
 ## Stack
 Next.js 16 / React 19 / TypeScript / Supabase / Vercel.
 
+## Current implementation
+- Legal AI workspace
+- Case intake and case list routes
+- Immigration intake route
+- Compliance classifier
+- Legal authority ranking
+- Citation-verification primitives
+- Legal-source registry and versioning
+- Case/evidence/timeline domain engine
+- Five-interaction trial and $59 entitlement model
+
 See `docs/ROADMAP.md` for phased delivery and `supabase/migrations/0001_foundation.sql` for the RLS-first initial schema.
