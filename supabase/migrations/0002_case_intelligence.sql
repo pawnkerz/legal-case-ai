@@ -7,7 +7,7 @@ create table if not exists public.case_timeline_events (
   occurred_at timestamptz not null,
   label text not null,
   description text,
-  source_document_id uuid references public.documents(id) on delete set null,
+  source_document_id uuid references public.case_documents(id) on delete set null,
   is_deadline boolean not null default false,
   confidence text not null default 'confirmed' check (confidence in ('confirmed','needs_review')),
   created_at timestamptz not null default now(),
@@ -22,7 +22,7 @@ create table if not exists public.evidence_items (
   kind text not null check (kind in ('document','photo','video','audio','message','testimony','other')),
   status text not null default 'collected' check (status in ('collected','missing','disputed')),
   notes text,
-  source_document_id uuid references public.documents(id) on delete set null,
+  source_document_id uuid references public.case_documents(id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
